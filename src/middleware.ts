@@ -18,9 +18,17 @@ export function middleware(request: NextRequest) {
     const publicRoute = publicRoutes.find(route => route.path === path)
     const authToken = request.cookies.get('token')
 
-    if(!authToken && publicRoute) {
-        return NextResponse.next()
+    if(path === '/') {
+        const redirectUrl = request.nextUrl.clone()
+
+        redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE
+
+        return NextResponse.redirect(redirectUrl)
     }
+
+    // if(!authToken && publicRoute) {
+    //     return NextResponse.next()
+    // }
 
     // if(!authToken && !publicRoute) {
     //     const redirectUrl = request.nextUrl.clone()
