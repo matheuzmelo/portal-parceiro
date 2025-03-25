@@ -10,9 +10,15 @@ export default function SignIn() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleSubmit = (e) => {
+    interface FormValues {
+        email: string;
+        password: string;
+    }
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Login:", { email, password });
+        const formValues: FormValues = { email, password };
+        console.log("Login:", formValues);
     }
 
     return (
