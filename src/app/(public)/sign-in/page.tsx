@@ -1,6 +1,7 @@
 "use client"
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
 import MonSegurosLogo from '../../../../public/images/logo_monseguros_white.png'
 import Link from "next/link";
 import { Eye, EyeClosed } from "@phosphor-icons/react";
@@ -9,6 +10,7 @@ export default function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const router = useRouter(); // Initialize useRouter
 
     interface FormValues {
         email: string;
@@ -18,6 +20,9 @@ export default function SignIn() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formValues: FormValues = { email, password };
+
+        router.push('/home');
+
         console.log("Login:", formValues);
     }
 
@@ -64,7 +69,7 @@ export default function SignIn() {
                             </div>
                             <button
                                 type="submit"
-                                className="w-full bg-blue-950 hover:bg-blue-1000 text-white font-bold py-2 px-4 rounded-lg translate-0.5 cursor-pointer"
+                                className="w-full bg-yellow-650 hover:bg-yellow-600 text-white font-light py-2 px-4 rounded-lg transform transition-all cursor-pointer"
                             >
                                 Entrar
                             </button>

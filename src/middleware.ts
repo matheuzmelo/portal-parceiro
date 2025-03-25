@@ -22,20 +22,20 @@ export function middleware(request: NextRequest) {
         return NextResponse.next()
     }
 
-    if(!authToken && !publicRoute) {
-        const redirectUrl = request.nextUrl.clone()
+    // if(!authToken && !publicRoute) {
+    //     const redirectUrl = request.nextUrl.clone()
 
-        redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE
+    //     redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE
 
-        return NextResponse.redirect(redirectUrl)
-    }
+    //     return NextResponse.redirect(redirectUrl)
+    // }
 
-    if(authToken && publicRoute && publicRoute.whenAuthenticated === 'redirect'){
-        console.log('03')
-        const redirectUrl = request.nextUrl.clone()
-        redirectUrl.pathname = '/'
-        return NextResponse.redirect(redirectUrl)
-    }
+    // if(authToken && publicRoute && publicRoute.whenAuthenticated === 'redirect'){
+    //     console.log('03')
+    //     const redirectUrl = request.nextUrl.clone()
+    //     redirectUrl.pathname = '/'
+    //     return NextResponse.redirect(redirectUrl)
+    // }
 
     if(authToken && !publicRoute) {
         console.log('04')
