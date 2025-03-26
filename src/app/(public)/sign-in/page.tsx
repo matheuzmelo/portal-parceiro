@@ -1,16 +1,17 @@
 "use client"
 import Image from "next/image";
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter from next/navigation
+import { useRouter } from "next/navigation";
 import MonSegurosLogo from '../../../../public/images/logo_monseguros_white.png'
 import Link from "next/link";
 import { Eye, EyeClosed } from "@phosphor-icons/react";
+import Cookies from "js-cookie";
 
 export default function SignIn() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
-    const router = useRouter(); // Initialize useRouter
+    const router = useRouter();
 
     interface FormValues {
         email: string;
@@ -20,6 +21,10 @@ export default function SignIn() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formValues: FormValues = { email, password };
+
+        // Mock token creation
+        const mockToken = btoa(`${email}:${password}`);
+        Cookies.set("token", mockToken, { expires: 1 });
 
         router.push('/home');
 

@@ -18,7 +18,18 @@ export function middleware(request: NextRequest) {
     const publicRoute = publicRoutes.find(route => route.path === path)
     const authToken = request.cookies.get('token')
 
-    if(path === '/') {
+    if(path === '/' && authToken){
+        const redirectUrl = request.nextUrl.clone()
+
+        redirectUrl.pathname = '/home'
+
+        return NextResponse.redirect(redirectUrl)
+    }
+    if(!authToken && publicRoute) {
+        return NextResponse.next()
+    }
+
+    if(!authToken && !publicRoute) {
         const redirectUrl = request.nextUrl.clone()
 
         redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE
@@ -26,27 +37,13 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(redirectUrl)
     }
 
-    // if(!authToken && publicRoute) {
-    //     return NextResponse.next()
-    // }
-
-    // if(!authToken && !publicRoute) {
-    //     const redirectUrl = request.nextUrl.clone()
-
-    //     redirectUrl.pathname = REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE
-
-    //     return NextResponse.redirect(redirectUrl)
-    // }
-
-    // if(authToken && publicRoute && publicRoute.whenAuthenticated === 'redirect'){
-    //     console.log('03')
-    //     const redirectUrl = request.nextUrl.clone()
-    //     redirectUrl.pathname = '/'
-    //     return NextResponse.redirect(redirectUrl)
-    // }
+    if(authToken && publicRoute && publicRoute.whenAuthenticated === 'redirect'){
+        const redirectUrl = request.nextUrl.clone()
+        redirectUrl.pathname = '/'
+        return NextResponse.redirect(redirectUrl)
+    }
 
     if(authToken && !publicRoute) {
-        console.log('04')
         // checar se o JWT não expirou
         // Se sim, remover o cookie e redirecionar o usuário para o login
         // Aplicar uma estratégia de refresh
