@@ -1,11 +1,12 @@
 "use client";
 
-import { Export } from "@phosphor-icons/react";
+import { Export, X } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { saveAs } from "file-saver";
 import React, { useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import SecondaryButton from "./SecondaryButton";
+import { AsideComponent } from "./AsideComponent";
 
 // Definição do tipo de dado
 interface TableData {
@@ -15,6 +16,7 @@ interface TableData {
     countFileLines: number;
     banks: string;
     status: string;
+    leads: { id: number; name: string; email: string }[];
 }
 
 // Dados da tabela
@@ -24,7 +26,12 @@ const data: TableData[] = Array.from({ length: 50 }, (_, index) => ({
     releaseDate: `2013/05/${(index % 30) + 1}`,
     countFileLines: Math.floor(Math.random() * 100000) + 1,
     banks: ['Itaú', 'Bradesco', 'Santander', 'Caixa'][index % 4],
-        status: ['Válido', 'Inválido', 'Processado', 'Em Validação', 'Em Processamento'][index % 5],
+    status: ['Válido', 'Inválido', 'Processado', 'Em Validação', 'Em Processamento'][index % 5],
+    leads: Array.from({ length: Math.floor(Math.random() * 10) + 1 }, (_, leadIndex) => ({
+        id: leadIndex + 1,
+        name: `Lead ${leadIndex + 1}`,
+        email: `lead${leadIndex + 1}@example.com`,
+    })),
 }));
 
 // Definição das colunas
@@ -49,13 +56,11 @@ const columns: TableColumn<TableData>[] = [
     name: "Total de linhas",
     selector: (row) => row.countFileLines.toLocaleString(),
     sortable: true,
-    right: true,
   },
   {
     name: "Bancos",
     selector: (row) => row.banks,
     sortable: true,
-    right: true,
   },
   {
     name: "Status",
@@ -91,13 +96,25 @@ const exportCSV = () => {
 
 const DataTableComponent: React.FC = () => {
   const [filterText, setFilterText] = useState("");
+  const [selectedRow, setSelectedRow] = useState<TableData | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(filterText.toLowerCase())
   );
 
+  const handleRowClick = (row: TableData) => {
+    setSelectedRow(row);
+    setIsSidebarOpen(true);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+    setTimeout(() => setSelectedRow(null), 300); // Aguarda a animação antes de limpar os dados
+  };
+
   return (
-    <section className="p-6 bg-white shadow-md rounded-lg h-full">
+    <section className="p-6 bg-white shadow-md rounded-lg h-full relative">
       <div className="flex justify-between items-center mb-4">
         <input
           type="text"
@@ -116,6 +133,14 @@ const DataTableComponent: React.FC = () => {
         pagination
         highlightOnHover
         striped
+        pointerOnHover
+        onRowClicked={handleRowClick}
+      />
+
+      <AsideComponent
+        isSidebarOpen={isSidebarOpen}
+        closeSidebar={closeSidebar}
+        selectedRow={selectedRow}
       />
     </section>
   );

@@ -7,7 +7,6 @@ interface UploadButtonProps {
 
 export default function UploadButton({ action }: UploadButtonProps) {
   return (
-
     <PrimaryButton icon={<UploadSimple />} action={action} text="carga de dados" />
   );
 }

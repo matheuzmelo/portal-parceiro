@@ -9,7 +9,7 @@ import {
 } from '@phosphor-icons/react';
 import Image from 'next/image';
 import { useState } from 'react';
-import MonLogo from '../../../public/images/mon_logo.png';
+import MonSegurosLogo from '../../../public/images/logo_monseguros_white.png'
 
 export default function PrivateLayout({
     children
@@ -47,7 +47,7 @@ export default function PrivateLayout({
                 <div className="flex flex-col h-full">
                     <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} p-4 border-b border-blue-800`}>
                         {!isCollapsed && (
-                            <Image src={MonLogo} alt="circulo amarelo com estrela" className='w- w-2/6' />
+                            <Image src={MonSegurosLogo} alt="circulo amarelo com estrela" className='w-1/2' />
                         )}
                         <button
                             onClick={toggleSidebar}
@@ -94,7 +94,7 @@ export default function PrivateLayout({
 
             {/* Conteúdo Principal */}
             <main className={`flex-1 overflow-auto transition-all duration-300 ease-in-out`}>
-                <div className="p-5">
+                <div className="p-5 h-full">
                     {children}
                 </div>
             </main>

@@ -11,7 +11,7 @@ export default function Home() {
 
   return (
     <>
-      <section className="flex justify-between items-center mb-4 bg-white p-4 rounded-lg shadow-md h-full">
+      <section className="flex justify-between items-center mb-4 bg-white p-4 h-fit rounded-lg shadow-md">
         <div>
             <h1 className="text-lg font-medium text-blue-1000">Listagem de Cargas</h1>
         </div>
