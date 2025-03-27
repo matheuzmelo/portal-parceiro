@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ArrowArcRight, ArrowRight, X } from "@phosphor-icons/react";
 import DataTable from "react-data-table-component";
 import { ClientAsideComponent } from "./ClientAsideComponent";
+import clsx from "clsx";
 
 interface Lead {
   id: number;
@@ -72,14 +73,28 @@ export const AsideComponent: React.FC<AsideComponentProps> = ({
         </button>
         {selectedRow && (
           <div>
-            <h2 className="text-xl font-bold mb-4">Detalhes do Arquivo</h2>
-            <p><strong>ID:</strong> {selectedRow.id}</p>
-            <p><strong>Nome:</strong> {selectedRow.name}</p>
-            <p><strong>Data de Criação:</strong> {selectedRow.releaseDate}</p>
-            <p><strong>Total de Linhas:</strong> {selectedRow.countFileLines.toLocaleString()}</p>
-            <p><strong>Bancos:</strong> {selectedRow.banks}</p>
-            <p><strong>Status:</strong> {selectedRow.status}</p>
-
+            <h2 className="text-xl font-medium mb-4">Detalhes do Arquivo</h2>
+            <div className="grid md:grid-cols-2">
+              <div className="grid gap-6">
+                <p><span className="font-medium">ID:</span> <span className="p-2 bg-gray-300 rounded-lg">{selectedRow.id}</span></p>
+                <p><span className="font-medium">Nome:</span> <span className="p-2 bg-gray-300 rounded-lg">{selectedRow.name}</span></p>
+                <p><span className="font-medium">Data de Criação:</span> <span className="p-2 bg-gray-300 rounded-lg">{selectedRow.releaseDate}</span></p>
+              </div>
+              <div className="grid gap-6">
+                <p><span className="font-medium">Total de Linhas:</span> <span className="p-2 bg-gray-300 rounded-lg">{selectedRow.countFileLines.toLocaleString()}</span></p>
+                <p><span className="font-medium">Bancos:</span> <span className="p-2 bg-gray-300 rounded-lg">{selectedRow.banks}</span></p>
+                <p><span className="font-medium">Status: </span><span className={clsx(
+                    "px-2 py-1 rounded",
+                    {
+                      "bg-green-200 text-green-800": selectedRow.status === "Válido",
+                      "bg-red-200 text-red-800": selectedRow.status === "Inválido",
+                      "bg-blue-200 text-blue-800": selectedRow.status === "Processado",
+                      "bg-yellow-200 text-yellow-800": selectedRow.status === "Em Validação",
+                      "bg-purple-200 text-purple-800": selectedRow.status === "Em Processamento",
+                    }
+        )}>{selectedRow.status}</span></p>
+              </div>
+            </div>
             {selectedRow.leads && selectedRow.leads.length > 0 ? (
               <>
                 <h3 className="text-lg font-medium mt-6 mb-2">Clientes</h3>

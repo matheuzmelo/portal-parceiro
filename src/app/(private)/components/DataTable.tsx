@@ -16,7 +16,7 @@ interface TableData {
     countFileLines: number;
     banks: string;
     status: string;
-    leads: { id: number; name: string; email: string }[];
+    leads: { id: number; name: string; email: string; phone: string; address: string; status: string }[];
 }
 
 // Dados da tabela
@@ -31,6 +31,9 @@ const data: TableData[] = Array.from({ length: 50 }, (_, index) => ({
         id: leadIndex + 1,
         name: `Lead ${leadIndex + 1}`,
         email: `lead${leadIndex + 1}@example.com`,
+        phone: `+55 11 9${Math.floor(100000000 + Math.random() * 900000000)}`,
+        address: `Address ${leadIndex + 1}`,
+        status: ['Active', 'Inactive'][leadIndex % 2],
     })),
 }));
 
@@ -86,8 +89,8 @@ const columns: TableColumn<TableData>[] = [
 // Função para exportar CSV
 const exportCSV = () => {
   const csvContent =
-    ["Name,Release Date,NPM Downloads,Growth"]
-      .concat(data.map((d) => `${d.name},${d.releaseDate},${d.banks},${d.countFileLines}`))
+    ["nome_do_arquivo;data_criacao;total_linhas;bancos;status"]
+      .concat(data.map((d) => `${d.name};${d.releaseDate};${d.countFileLines};${d.banks};${d.status}`))
       .join("\n");
 
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
