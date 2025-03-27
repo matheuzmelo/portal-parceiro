@@ -10,6 +10,7 @@ interface Lead {
   email: string;
   phone: string;
   address: string;
+  cpf: string;
   status: string;
 }
 
@@ -50,6 +51,10 @@ export const AsideComponent: React.FC<AsideComponentProps> = ({
       name: "Nome",
       selector: (row: Lead) => row.name,
       sortable: true,
+    },
+    {
+      name: "CPF",
+      selector: (row: Lead) => row.cpf
     },
     {
       name: "Email",

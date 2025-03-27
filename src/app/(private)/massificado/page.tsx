@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import DataTableComponent from "../components/DataTable";
+import DataTableComponent from "../components/FileListDataTable";
 import EvidenceReportButton from "../components/EvidenceReportButton";
 import UploadButton from "../components/UploadButton";
 import UploadModal from "../components/UploadModal";
