@@ -59,19 +59,6 @@ const DataTableComponent: React.FC = () => {
     setData(files);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(filterText.toLowerCase())
   );
