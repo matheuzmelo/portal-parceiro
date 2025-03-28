@@ -1,12 +1,13 @@
 "use client";
 
-import { Export, X } from "@phosphor-icons/react";
+import { Export, File, Sliders } from "@phosphor-icons/react";
 import clsx from "clsx";
 import { saveAs } from "file-saver";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
-import SecondaryButton from "./SecondaryButton";
 import { AsideComponent } from "./AsideComponent";
+import { AsideComponentAttachFiles } from "./AsideComponetAttachFiles";
+import SecondaryButton from "./SecondaryButton";
 
 interface TableData {
     id: number;
@@ -23,6 +24,8 @@ const DataTableComponent: React.FC = () => {
   const [filterText, setFilterText] = useState("");
   const [selectedRow, setSelectedRow] = useState<TableData | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isAttachFilesSidebarOpen, setIsAttachFilesSidebarOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const generateFiles = () => {
@@ -56,6 +59,19 @@ const DataTableComponent: React.FC = () => {
     setData(files);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(filterText.toLowerCase())
   );
@@ -80,7 +96,56 @@ const DataTableComponent: React.FC = () => {
     saveAs(blob, "datatable_export.csv");
   };
 
+  const handleAction = (action: string, row: TableData) => {
+    switch (action) {
+      case "attach_evidence":
+        setSelectedRow(row);
+        setIsAttachFilesSidebarOpen(true);
+        break;
+      case "delete":
+        console.log("Delete action for:", row);
+        break;
+      default:
+        console.log("Unknown action:", action);
+    }
+  };
+
+  const closeAttachFilesSidebar = () => {
+    setIsAttachFilesSidebarOpen(false);
+    setTimeout(() => setSelectedRow(null), 300); // Wait for animation before clearing data
+  };
+
   const columns: TableColumn<TableData>[] = [
+    {
+      name: "Ações",
+      cell: (row) => {
+        const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+        return (
+          <div className="absolute w-3xs" ref={dropdownRef}>
+            <button
+              className="p-2 rounded-full hover:bg-gray-200 cursor-pointer"
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            >
+              <Sliders size={20} />
+            </button>
+            {isDropdownOpen && (
+              <div className="absolute top-8 left-0 bg-white shadow-md rounded-lg p-2 z-10">
+                <button
+                  onClick={() => {
+                    handleAction("attach_evidence", row);
+                    setIsDropdownOpen(false);
+                  }}
+                  className="flex gap-2 items-center px-4 py-2 hover:bg-gray-100 rounded-md cursor-pointer">
+                  <File size={20}/> Anexar evidencia
+                </button>
+              </div>
+            )}
+          </div>
+        );
+      },
+      width: "120px",
+    },
     {
       name: 'ID',
       selector: (row) => row.id,
@@ -124,7 +189,6 @@ const DataTableComponent: React.FC = () => {
           {row.status}
         </span>),
       sortable: true,
-      right: true,
     },
   ];
 
@@ -155,6 +219,12 @@ const DataTableComponent: React.FC = () => {
       <AsideComponent
         isSidebarOpen={isSidebarOpen}
         closeSidebar={closeSidebar}
+        selectedRow={selectedRow}
+      />
+
+      <AsideComponentAttachFiles
+        isSidebarOpen={isAttachFilesSidebarOpen}
+        closeSidebar={closeAttachFilesSidebar}
         selectedRow={selectedRow}
       />
     </section>
